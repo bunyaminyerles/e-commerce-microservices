@@ -1,0 +1,16 @@
+spring:
+    application:
+        name: product
+    profiles:
+        include: postgresql
+
+springdoc:
+    swagger-ui:
+        path: /swagger-ui
+
+server:
+    port: 8081
+
+logging:
+    level:
+        org.hibernate: INFO

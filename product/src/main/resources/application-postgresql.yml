@@ -1,0 +1,26 @@
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/productdb}
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_USERNAME:casestudydbuser}
+    password: ${DB_PASSWORD:casestudydbpass}
+    hikari:
+      pool-name: CaseStudyPostgresHikariPool
+      maximum-pool-size: 10
+      minimum-idle: 3
+      connectionTimeout: 10000
+      idle-timeout: 60000
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+        dialect: org.hibernate.dialect.PostgreSQL10Dialect
+        package_to_scan: com.example.product
+  data:
+    jpa:
+      repositories:
+        enabled: true

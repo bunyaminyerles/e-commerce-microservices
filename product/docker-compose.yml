@@ -1,0 +1,47 @@
+version: '3.9'
+services:
+  productdb:
+    image: "kartoza/postgis:13.0"
+    restart: unless-stopped
+    hostname: db
+    domainname: db
+    environment:
+      POSTGRES_USER: casestudydbuser
+      POSTGRES_PASS: casestudydbpass
+      POSTGRES_DBNAME: productdb
+      ALLOW_IP_RANGE: 0.0.0.0/0
+    ports:
+      - "5432:5432"
+    volumes:
+      - productdb:/var
+    networks:
+      - productdb-net
+    healthcheck:
+      test: [ "CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'" ]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+  product-service:
+    restart: always
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    pull_policy: never
+    ports:
+      - "8081:8081"
+    environment:
+      APP_FILE_NAME: product-service
+      DB_URL: jdbc:postgresql://db:5432/productdb
+    depends_on:
+      productdb:
+        condition: service_healthy
+    networks:
+      - productdb-net
+
+
+networks:
+  productdb-net:
+    driver: bridge
+
+volumes:
+  productdb:
