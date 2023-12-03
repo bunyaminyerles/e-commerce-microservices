@@ -9,6 +9,8 @@ import java.util.Optional;
 
 
 public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
+
+    Boolean existsByIdAndDeletedFalse(Long id);
     Optional<ProductEntity> findByIdAndDeletedFalse(Long id);
 
     Page<ProductEntity> findAllByDeletedIsFalse(Pageable pageable);

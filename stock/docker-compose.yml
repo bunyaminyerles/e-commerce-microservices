@@ -1,0 +1,47 @@
+version: '3.9'
+services:
+  stockdb:
+    image: "kartoza/postgis:13.0"
+    restart: unless-stopped
+    hostname: db
+    domainname: db
+    environment:
+      POSTGRES_USER: casestudydbuser
+      POSTGRES_PASS: casestudydbpass
+      POSTGRES_DBNAME: stockdb
+      ALLOW_IP_RANGE: 0.0.0.0/0
+    ports:
+      - "5433:5432"
+    volumes:
+      - stockdb:/var
+    networks:
+      - stockdb-net
+    healthcheck:
+      test: [ "CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'" ]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+  stock-service:
+    restart: always
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    pull_policy: never
+    ports:
+      - "8082:8082"
+    environment:
+      APP_FILE_NAME: stock-service
+      DB_URL: jdbc:postgresql://db:5433/stockdb
+    depends_on:
+      stockdb:
+        condition: service_healthy
+    networks:
+      - stockdb-net
+
+
+networks:
+  stockdb-net:
+    driver: bridge
+
+volumes:
+  stockdb:

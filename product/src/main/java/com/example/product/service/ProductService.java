@@ -75,6 +75,9 @@ public class ProductService {
                             .deleted(true)
                             .build());
         }
+    }
 
+    public Boolean isExist(Long id) {
+        return productRepository.existsByIdAndDeletedFalse(id);
     }
 }

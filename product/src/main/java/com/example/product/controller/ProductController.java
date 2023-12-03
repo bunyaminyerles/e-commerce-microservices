@@ -68,4 +68,9 @@ public class ProductController {
         return ResponseEntity.notFound().build();
     }
 
+    @GetMapping("/isExist/{id}")
+    public ResponseEntity<Boolean> isExist(@PathVariable Long id) {
+        return ResponseEntity.ok(productService.isExist(id));
+    }
+
 }

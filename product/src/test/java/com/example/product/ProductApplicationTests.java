@@ -226,4 +226,12 @@ class ProductApplicationTests {
         assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
+    @Test
+    void shouldExistAProduct() {
+        ResponseEntity<Boolean> response = restTemplate
+                .getForEntity("/product/isExist/100", Boolean.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(response.getBody()).isEqualTo(true);
+    }
+
 }
