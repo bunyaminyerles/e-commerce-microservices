@@ -9,7 +9,7 @@ springdoc:
     path: /swagger-ui
 
 server:
-  port: 8082
+  port: 8083
 
 logging:
   level:
@@ -17,4 +17,4 @@ logging:
 
 service-address:
   product: http://localhost:8081
-  order: http://localhost:8083
+  stock: http://localhost:8082

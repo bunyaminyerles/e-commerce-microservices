@@ -17,7 +17,7 @@ public class StockDto {
     @JsonView({ViewRole.DeleteRequest.class, ViewRole.ViewRequest.class})
     private Long id;
     @NotNull(message = "Product id is required")
-    @JsonView({ViewRole.ViewRequest.class, ViewRole.AddRequest.class})
+    @JsonView({ViewRole.ViewRequest.class, ViewRole.AddRequest.class, ViewRole.UpsertRequest.class})
     private Long productId;
     @JsonView({ViewRole.ViewRequest.class, ViewRole.AddRequest.class, ViewRole.UpsertRequest.class})
     @NotNull(message = "Stock is required")

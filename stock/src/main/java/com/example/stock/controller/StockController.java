@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -58,5 +59,20 @@ public class StockController {
         }
         return ResponseEntity.notFound().build();
     }
+
+/*    @PostMapping("/updateStock/{id}")
+    @JsonView(ViewRole.UpsertRequest.class)
+    private ResponseEntity<Void> updateStockByOrder(@PathVariable Long id, @RequestParam Integer quantity, @RequestParam Boolean isAdd) {
+            stockService.updateStockByOrder(id, quantity, isAdd);
+            return ResponseEntity.noContent().build();
+    }*/
+
+    @PostMapping("/updateStock/all")
+    @JsonView(ViewRole.UpsertRequest.class)
+    private ResponseEntity<Void> updateStockListByOrder(@RequestBody List<StockDto> stockList, @RequestParam Boolean isAdd) {
+            stockService.updateStockListByOrder(stockList);
+            return ResponseEntity.noContent().build();
+    }
+
 
 }

@@ -1,4 +1,4 @@
-package com.example.stock.configuration.swagger;
+package com.example.order.configuration.swagger;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
@@ -14,7 +14,7 @@ public class SwaggerConfig {
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("Stock API başlık")
+                        .title("Order API başlık")
                         .version("1.0")
                         .description("Product API açıklama")
                         .termsOfService("http://swagger.io/terms/")

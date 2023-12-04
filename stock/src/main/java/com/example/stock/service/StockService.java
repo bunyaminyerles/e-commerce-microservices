@@ -7,11 +7,13 @@ import com.example.stock.repository.StockRepository;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.env.Environment;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,16 +22,17 @@ import java.util.Optional;
 public class StockService {
     private final StockRepository stockRepository;
     private final StockFactory stockFactory;
+    private final Environment env;
 
 
     public Optional<StockDto> getStock(Long id) {
-        return stockRepository.findById(id).map(stockFactory::toStockDto);
+        return stockRepository.findByProductId(id).map(stockFactory::toStockDto);
     }
 
     public StockDto addStock(StockDto stock) {
         try {
             ResponseEntity<Boolean> response
-                    = new RestTemplate().getForEntity("http://localhost:8081/product/isExist/" + stock.getProductId(), Boolean.class);
+                    = new RestTemplate().getForEntity(env.getProperty("service-address.product") + "/product/isExist/" + stock.getProductId(), Boolean.class);
             if (!response.getBody()) {
                 throw new InvalidDataAccessApiUsageException("Product does not exist");
             }
@@ -57,6 +60,25 @@ public class StockService {
     }
 
     public void deleteStock(Long id) {
-        stockRepository.deleteById(id);
+        stockRepository.deleteByProductId(id);
     }
+
+
+    public void updateStockListByOrder(List<StockDto> stockDtoList) {
+        final List<StockEntity> stockEntityList = stockDtoList.stream().map(stockDto -> {
+            Optional<StockEntity> stockEntity = stockRepository.findByProductId(stockDto.getProductId());
+            if (stockEntity.isEmpty()) {
+                throw new InvalidDataAccessApiUsageException("Product does not exist in stock");
+            }
+            StockEntity stock = stockEntity.get();
+            if (stock.getStock() < stockDto.getStock()) {
+                throw new InvalidDataAccessApiUsageException("Stock is not enough");
+            }
+            stock.setStock(stock.getStock() - stockDto.getStock());
+            return stock;
+        }).toList();
+
+        stockRepository.saveAll(stockEntityList);
+    }
+
 }

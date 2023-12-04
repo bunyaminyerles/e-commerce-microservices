@@ -1,0 +1,47 @@
+version: '3.9'
+services:
+  orderdb:
+    image: "kartoza/postgis:13.0"
+    restart: unless-stopped
+    hostname: db
+    domainname: db
+    environment:
+      POSTGRES_USER: casestudydbuser
+      POSTGRES_PASS: casestudydbpass
+      POSTGRES_DBNAME: orderdb
+      ALLOW_IP_RANGE: 0.0.0.0/0
+    ports:
+      - "5434:5432"
+    volumes:
+      - orderdb:/var
+    networks:
+      - orderdb-net
+    healthcheck:
+      test: [ "CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'" ]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+  order-service:
+    restart: always
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    pull_policy: never
+    ports:
+      - "8081:8081"
+    environment:
+      APP_FILE_NAME: order-service
+      DB_URL: jdbc:postgresql://db:5432/orderdb
+    depends_on:
+      orderdb:
+        condition: service_healthy
+    networks:
+      - orderdb-net
+
+
+networks:
+  orderdb-net:
+    driver: bridge
+
+volumes:
+  orderdb:

@@ -80,4 +80,8 @@ public class ProductService {
     public Boolean isExist(Long id) {
         return productRepository.existsByIdAndDeletedFalse(id);
     }
+
+    public String getProductName(Long id) {
+        return productRepository.findByIdAndDeletedFalse(id).map(ProductEntity::getName).orElse(null);
+    }
 }

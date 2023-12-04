@@ -14,3 +14,7 @@ server:
 logging:
     level:
         org.hibernate: INFO
+
+service-address:
+    stock: http://localhost:8082
+    order: http://localhost:8083
