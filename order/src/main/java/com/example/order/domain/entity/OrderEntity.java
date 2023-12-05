@@ -1,6 +1,8 @@
 package com.example.order.domain.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,6 +32,8 @@ public class OrderEntity extends AuditingEntity {
     @Column(name = "total_amount")
     @NotNull(message = "Total amount is required")
     private Double totalAmount;
+    @Min(value = 0, message = "Discount should be greater than 0")
+    @Max(value = 100, message = "Discount should be less than 100")
     @Column(name = "discount")
     @NotNull(message = "Discount is required")
     private Double discount;

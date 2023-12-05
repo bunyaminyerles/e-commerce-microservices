@@ -69,7 +69,7 @@ public class StockController {
 
     @PostMapping("/updateStock/all")
     @JsonView(ViewRole.UpsertRequest.class)
-    private ResponseEntity<Void> updateStockListByOrder(@RequestBody List<StockDto> stockList, @RequestParam Boolean isAdd) {
+    private ResponseEntity<Void> updateStockListByOrder(@RequestBody List<StockDto> stockList) {
             stockService.updateStockListByOrder(stockList);
             return ResponseEntity.noContent().build();
     }

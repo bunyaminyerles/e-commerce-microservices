@@ -1,6 +1,7 @@
 package com.example.order.domain.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,7 @@ public class OrderDetailEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_detail_seq_gen")
     private Long id;
     @Column(name = "quantity")
+    @Min(value = 1, message = "Product quantity should be greater than 0")
     private Integer quantity;
     @Column(name = "amount")
     private Double unitAmount;

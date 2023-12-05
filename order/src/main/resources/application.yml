@@ -1,12 +1,12 @@
 spring:
   application:
-    name: stock
+    name: order
   profiles:
     include: postgresql
 
 springdoc:
   swagger-ui:
-    path: /swagger-ui
+    path: /order/swagger-ui
 
 server:
   port: 8083

@@ -65,7 +65,7 @@ public class OrderService {
             try {
                 OrderEntity savedOrderEntity = orderRepository.save(orderEntity);
                 return orderFactory.toOrderDto(savedOrderEntity);
-            } catch (Exception e) {
+            } catch (ConstraintViolationException e) {
                 // rollback stock
                 stockList = stockList.stream().map(orderDetailDto ->
                         new Stock(orderDetailDto.productId(), -orderDetailDto.stock())
@@ -76,7 +76,7 @@ public class OrderService {
 
         } catch (ConstraintViolationException e) {
             log.error("Error while saving product", e);
-            throw e;
+            throw new InvalidDataAccessApiUsageException(e.getLocalizedMessage());
         }
 
     }

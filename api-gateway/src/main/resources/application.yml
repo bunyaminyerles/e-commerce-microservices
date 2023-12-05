@@ -1,0 +1,23 @@
+server:
+  port: 8080
+
+application:
+  urls:
+    gateway: ${GATEWAY_URL:http://localhost:8080}
+
+
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+
+
+logging:
+  level:
+    reactor.netty: INFO
+    org.springframework: DEBUG
