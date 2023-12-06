@@ -1,23 +1,37 @@
 server:
   port: 8080
 
-application:
-  urls:
-    gateway: ${GATEWAY_URL:http://localhost:8080}
-
-
-
 spring:
   application:
     name: api-gateway
   cloud:
     gateway:
-      discovery:
-        locator:
-          enabled: true
+      routes:
+        - id: product-service
+          uri: ${PRODUCT_SERVICE_URL:http://localhost:8081}
+          predicates:
+            - Path=/api-product/**
+          filters:
+            - RewritePath=/api-product/(?<remaining>.*), /$\{remaining}
 
+        - id: stock-service
+          uri: ${STOCK_SERVICE_URL:http://localhost:8082}
+          predicates:
+            - name: Path
+              args:
+                pattern: /api-stock/**
+          filters:
+            - RewritePath=/api-stock/(?<remaining>.*), /$\{remaining}
+
+        - id: order-service
+          uri: ${ORDER_SERVICE_URL:http://localhost:8083}
+          predicates:
+            - name: Path
+              args:
+                pattern: /api-order/**
+          filters:
+            - RewritePath=/api-order/(?<remaining>.*), /$\{remaining}
 
 logging:
   level:
     reactor.netty: INFO
-    org.springframework: DEBUG
