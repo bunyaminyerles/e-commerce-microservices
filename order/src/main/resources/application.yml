@@ -16,5 +16,5 @@ logging:
     org.hibernate: INFO
 
 service-address:
-  product: http://localhost:8081
-  stock: http://localhost:8082
+  product: ${PRODUCT_SERVICE_URL:http://localhost:8081}
+  stock: ${STOCK_SERVICE_URL:http://localhost:8082}

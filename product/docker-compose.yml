@@ -22,6 +22,7 @@ services:
       timeout: 3s
       retries: 3
   product-service:
+    image: product-service:latest
     restart: always
     build:
       context: ./

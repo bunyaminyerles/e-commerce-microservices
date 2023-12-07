@@ -1,0 +1,161 @@
+version: '3.9'
+services:
+  api-gateway-service:
+    image: api-gateway:latest
+    restart: always
+    build:
+      context: ./api-gateway/
+      dockerfile: Dockerfile
+    pull_policy: never
+    ports:
+      - "8080:8080"
+    environment:
+      APP_FILE_NAME: api-gateway
+      PRODUCT_SERVICE_URL: http://product-service:8081
+      STOCK_SERVICE_URL: http://stock-service:8082
+      ORDER_SERVICE_URL: http://order-service:8083
+    networks:
+      - gateway-net
+  orderdb:
+    image: "kartoza/postgis:13.0"
+    restart: unless-stopped
+    hostname: db
+    domainname: db
+    environment:
+      POSTGRES_USER: casestudydbuser
+      POSTGRES_PASS: casestudydbpass
+      POSTGRES_DBNAME: orderdb
+      ALLOW_IP_RANGE: 0.0.0.0/0
+    ports:
+      - "5434:5432"
+    volumes:
+      - orderdb:/var
+    networks:
+      - orderdb-net
+    healthcheck:
+      test: [ "CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'" ]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+  order-service:
+    image: order-service:latest
+    restart: always
+    hostname: order-service
+    domainname: order-service
+    build:
+      context: ./order/
+      dockerfile: Dockerfile
+    pull_policy: never
+    ports:
+      - "8083:8083"
+    environment:
+      APP_FILE_NAME: order-service
+      DB_URL: jdbc:postgresql://db:5432/orderdb
+      PRODUCT_SERVICE_URL: http://product-service:8081
+      STOCK_SERVICE_URL: http://stock-service:8082
+    depends_on:
+      orderdb:
+        condition: service_healthy
+    networks:
+      - orderdb-net
+      - gateway-net
+  productdb:
+    image: "kartoza/postgis:13.0"
+    restart: unless-stopped
+    hostname: db
+    domainname: db
+    environment:
+      POSTGRES_USER: casestudydbuser
+      POSTGRES_PASS: casestudydbpass
+      POSTGRES_DBNAME: productdb
+      ALLOW_IP_RANGE: 0.0.0.0/0
+    ports:
+      - "5432:5432"
+    volumes:
+      - productdb:/var
+    networks:
+      - productdb-net
+    healthcheck:
+      test: [ "CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'" ]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+  product-service:
+    image: product-service:latest
+    restart: always
+    hostname: product-service
+    domainname: product-service
+    build:
+      context: ./product/
+      dockerfile: Dockerfile
+    pull_policy: never
+    ports:
+      - "8081:8081"
+    environment:
+      APP_FILE_NAME: product-service
+      DB_URL: jdbc:postgresql://db:5432/productdb
+      STOCK_SERVICE_URL: http://stock-service:8082
+      ORDER_SERVICE_URL: http://order-service:8083
+    depends_on:
+      productdb:
+        condition: service_healthy
+    networks:
+      - productdb-net
+      - gateway-net
+  stockdb:
+    image: "kartoza/postgis:13.0"
+    restart: unless-stopped
+    hostname: db
+    domainname: db
+    environment:
+      POSTGRES_USER: casestudydbuser
+      POSTGRES_PASS: casestudydbpass
+      POSTGRES_DBNAME: stockdb
+      ALLOW_IP_RANGE: 0.0.0.0/0
+    ports:
+      - "5433:5432"
+    volumes:
+      - stockdb:/var
+    networks:
+      - stockdb-net
+    healthcheck:
+      test: [ "CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'" ]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+  stock-service:
+    image: stock-service:latest
+    restart: always
+    hostname: stock-service
+    domainname: stock-service
+    build:
+      context: ./stock/
+      dockerfile: Dockerfile
+    pull_policy: never
+    ports:
+      - "8082:8082"
+    environment:
+      APP_FILE_NAME: stock-service
+      DB_URL: jdbc:postgresql://db:5432/stockdb
+      PRODUCT_SERVICE_URL: http://product-service:8081
+      ORDER_SERVICE_URL: http://order-service:8083
+    depends_on:
+      stockdb:
+        condition: service_healthy
+    networks:
+      - stockdb-net
+      - gateway-net
+
+networks:
+  stockdb-net:
+    driver: bridge
+  productdb-net:
+    driver: bridge
+  orderdb-net:
+    driver: bridge
+  gateway-net:
+
+volumes:
+  orderdb:
+  productdb:
+  stockdb:

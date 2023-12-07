@@ -1,20 +1,22 @@
 spring:
-    application:
-        name: product
-    profiles:
-        include: postgresql
+  application:
+    name: product
+  profiles:
+    include: postgresql
 
 springdoc:
-    swagger-ui:
-        path: /swagger-ui
+  swagger-ui:
+    path: /swagger-ui
 
 server:
-    port: 8081
+  port: 8081
 
 logging:
-    level:
-        org.hibernate: INFO
+  level:
+    org.hibernate: INFO
+    reactor.netty: INFO
 
 service-address:
-    stock: http://localhost:8082
-    order: http://localhost:8083
+  stock: ${STOCK_SERVICE_URL:http://localhost:8082}
+  order: ${ORDER_SERVICE_URL:http://localhost:8083}
+

@@ -22,6 +22,7 @@ services:
       timeout: 3s
       retries: 3
   stock-service:
+    image: stock-service:latest
     restart: always
     build:
       context: ./
@@ -31,7 +32,7 @@ services:
       - "8082:8082"
     environment:
       APP_FILE_NAME: stock-service
-      DB_URL: jdbc:postgresql://db:5433/stockdb
+      DB_URL: jdbc:postgresql://db:5432/stockdb
     depends_on:
       stockdb:
         condition: service_healthy

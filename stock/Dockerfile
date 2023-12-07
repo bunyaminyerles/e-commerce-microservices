@@ -11,4 +11,4 @@ COPY --from=builder target/app.jar /opt/stock-service/app.jar
 RUN chown -R nobody /opt/stock-service
 USER nobody
 EXPOSE 8082
-CMD ["sh", "-c","java -jar /stock-service/app.jar"]
+CMD ["sh", "-c","java -jar /opt/stock-service/app.jar"]

@@ -16,5 +16,5 @@ logging:
     org.hibernate: INFO
 
 service-address:
-  product: http://localhost:8081
-  order: http://localhost:8083
+  product: ${PRODUCT_SERVICE_URL:http://localhost:8081}
+  order: ${ORDER_SERVICE_URL:http://localhost:8083}

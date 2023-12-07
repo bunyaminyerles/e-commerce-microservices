@@ -12,6 +12,6 @@ public interface StockRepository extends JpaRepository<StockEntity, Long> {
 
     Boolean existsByProductId(Long productId);
 
-    Void deleteByProductId(Long productId);
+    void deleteByProductId(Long productId);
 
 }

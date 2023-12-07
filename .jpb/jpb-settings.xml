@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PersistenceUnitSettings">
+    <persistence-units>
+      <persistence-unit name="Default">
+        <packages>
+          <package value="com.example.apigateway" />
+          <package value="com.example.order" />
+          <package value="com.example.product" />
+          <package value="com.example.stock" />
+        </packages>
+      </persistence-unit>
+    </persistence-units>
+  </component>
+</project>

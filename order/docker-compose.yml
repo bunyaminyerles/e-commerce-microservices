@@ -22,13 +22,14 @@ services:
       timeout: 3s
       retries: 3
   order-service:
+    image: order-service:latest
     restart: always
     build:
       context: ./
       dockerfile: Dockerfile
     pull_policy: never
     ports:
-      - "8081:8081"
+      - "8083:8083"
     environment:
       APP_FILE_NAME: order-service
       DB_URL: jdbc:postgresql://db:5432/orderdb
