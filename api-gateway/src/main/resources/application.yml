@@ -10,25 +10,21 @@ spring:
         - id: product-service
           uri: ${PRODUCT_SERVICE_URL:http://localhost:8081}
           predicates:
-            - Path=/api-product/**
+            - Path= /api-product/** , /product/v3/api-docs/**
           filters:
             - RewritePath=/api-product/(?<remaining>.*), /$\{remaining}
 
         - id: stock-service
           uri: ${STOCK_SERVICE_URL:http://localhost:8082}
           predicates:
-            - name: Path
-              args:
-                pattern: /api-stock/**
+            - Path= /api-stock/** , /stock/v3/api-docs/**
           filters:
             - RewritePath=/api-stock/(?<remaining>.*), /$\{remaining}
 
         - id: order-service
           uri: ${ORDER_SERVICE_URL:http://localhost:8083}
           predicates:
-            - name: Path
-              args:
-                pattern: /api-order/**
+            - Path= /api-order/** , /order/v3/api-docs/**
           filters:
             - RewritePath=/api-order/(?<remaining>.*), /$\{remaining}
 

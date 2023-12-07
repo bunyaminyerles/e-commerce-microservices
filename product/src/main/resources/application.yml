@@ -7,6 +7,8 @@ spring:
 springdoc:
   swagger-ui:
     path: /swagger-ui
+  api-docs:
+    path: /product/v3/api-docs
 
 server:
   port: 8081
@@ -19,4 +21,5 @@ logging:
 service-address:
   stock: ${STOCK_SERVICE_URL:http://localhost:8082}
   order: ${ORDER_SERVICE_URL:http://localhost:8083}
+  gateway: ${GATEWAY_SERVICE_URL:http://localhost:8080}
 

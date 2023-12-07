@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebSecurityConfig {
-    @Value("${service-address.product},${service-address.stock}")
+    @Value("${service-address.product},${service-address.stock},${service-address.gateway}")
     private String crossOrigins;
 
     @Bean
@@ -23,5 +23,4 @@ public class WebSecurityConfig {
             }
         };
     }
-
 }
